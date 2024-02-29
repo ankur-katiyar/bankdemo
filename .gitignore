@@ -1,0 +1,16 @@
+# Other artifacts
+__pycache__
+*.cpython*
+
+# Generic logs
+*.log
+
+# Build Artifacts that should be ignored.
+*.lst
+*.dll
+*.idy
+*.obj
+*.tlog
+
+# Generated Source Artifacts
+/sources/copybook/generated

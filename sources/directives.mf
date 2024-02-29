@@ -1,0 +1,49 @@
+# The following line marks that the directives.mf is the root.
+@root
+
+#The following sets the baseline directives for all COBOL programs
+
+[*.{cbl,CBL}]
+DIALECT(ENTCOBOL)
+CHARSET(ASCII)
+MAX-ERROR(100)
+ANIM
+LIST()
+NOPROFILE
+SOURCEFORMAT(FIXED)
+COPYEXT(cpy,CPY)
+WARNING(1)
+EXITPROGRAM(ANSI)
+NOPANVALET
+NOLIBRARIAN
+
+#All programs in these folder require the CICS ECM except those specified
+[cobol/core/*.cbl]
+CICSECM
+[cobol/core/UDATECNV.cbl]
+NO-CICSECM
+
+[cobol/core/SCUSTOMP.cbl]
+NO-CICSECM
+
+[cobol/core/SVERSONP.cbl]
+NO-CICSECM
+
+[cobol/core/SSECUREP.cbl]
+NO-CICSECM
+
+[cobol/data/*.cbl]
+CICSECM
+#Programs starting with DFH* use the MF dialect
+[DFH*.cbl]
+DIALECT(MF)
+
+#Programs Beginning with ZB* do NOT require the CICS ECM
+[ZB*.cbl]
+NO-CICSECM
+
+[*.{bms,BMS}]
+/SYSPARM=DSECT
+/IGNORE
+/COBOL=./copybook/generated
+/SYSPARM=MAP
