@@ -1,1 +1,29 @@
 ant -lib "C:\Program Files (x86)\Micro Focus\Enterprise Developer\bin\mfant.jar" -f Commonbuild.xml -Dbasedir=. -Dloaddir="C:\Projects\Blueprint\loadlib" -Dset64bit=true
+
+python createDeployPackage.py C:\Projects\Blueprint\loadlib C:\Projects\Blueprint\bankdemo main Init APP
+python createDeployPackage.py C:\Projects\Blueprint\system  C:\Projects\Blueprint\bankdemo main Init SYS
+
+
+net stop escwa
+net stop mf_CCITCP2
+del "%programdata%\Micro Focus\Enterprise Developer\ESCWA\commonwebadmin.json"
+rmdir /S /Q "%programdata%\Micro Focus\Enterprise Developer\MFDS"
+rmdir /S /Q C:\Es
+xcopy C:\Projects\Blueprint\es-automation-templates-main\Script C:\Es\Script\ /Y
+xcopy C:\Projects\Blueprint\es-automation-templates-main\Script\Config\Example\FirstSteps C:\Es\Script\Config /I /Y
+
+
+--> Execute the following to commands first Configure MFDS and Escwa
+python c:\Es\Script\esDeployConfiguration.py -o=Dev -u SYSAD -p SYSAD deploy
+
+--> and then provision the ESi
+python c:\Es\Script\esDeployConfiguration.py -o=Dev -u SYSAD -p SYSAD configesi
+
+-->Deploy App/system
+python c:\Es\Script\esDeployBuildArtifacts.py -e=DABNK -o=Dev -u SYSAD -p SYSAD deployartifacts
+
+--> Start ESi
+python C:\Es\Script\esControl.py              -v -e=DABNK -u=SYSAD -p=SYSAD -o=Dev startesi
+
+--> Catalog Data 
+python C:\Es\Script\esControl.py  -e DABNK runjob -jC:\Projects\Blueprint\bankdemo\sources\jcl\ZBNKINIT.jcl
